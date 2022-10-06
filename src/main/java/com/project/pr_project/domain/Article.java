@@ -26,10 +26,8 @@ import java.util.Set;
         @Index(columnList ="createdBy")
 })
 
-@EntityListeners(AuditingEntityListener.class)
 @Entity
-
-public class Article {
+public class Article extends AuditingFields {
     //document에는 index를 표현할 방법이 없어서 적지 않음.
     // 본문검색
     // 전체 레벨에서 setter를 쓰지 않는 방법 사용
@@ -47,11 +45,6 @@ public class Article {
     @OrderBy("id")
     @OneToMany(mappedBy = "article",cascade = CascadeType.ALL)
     private final Set<ArticleComment> articleComments = new LinkedHashSet<>();
-
-    @CreatedDate @Column(nullable = false) private LocalDateTime createdAt; // 생성일시
-    @CreatedBy @Column(nullable = false, length = 100) private String createdBy; // 생성자
-    @LastModifiedDate @Column(nullable = false) private LocalDateTime modifiedAt; // 수정일시
-    @LastModifiedBy @Column(nullable = false, length = 100) private String modifiedBy; //수정자자
 
     protected Article() {}
 
