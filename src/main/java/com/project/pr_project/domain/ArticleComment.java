@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Getter
-@ToString
+@ToString(callSuper = true)
 @Table(indexes = {
         @Index(columnList ="content"),
         @Index(columnList ="createdAt"),
@@ -22,22 +22,29 @@ public class ArticleComment extends AuditingFields {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter @ManyToOne(optional = false) private Article article; //게시글 (ID)
-    @Setter @Column(nullable = false,length = 500) private String content; // 본문
+    @Setter @ManyToOne(optional = false) private Article article;
+    // 게시글 (ID) ManyToOne : 상관관계, optional = false : 해당 필드가 필수로 있어야 함 (casecading = none이 기본)
+    @Setter @ManyToOne(optional = false) private UserAccount userAccount; // 유저 정보 (ID)
+    @Setter @Column(nullable = false, length = 500) private String content; // 본문
 
 
-
-
-    protected ArticleComment() {
-    }
-
-    private ArticleComment(Article article, String content) {
+    protected ArticleComment() {}
+    /* public ArticleComment(Article article, String content) {
         this.article = article;
         this.content = content;
-    }
+    } // @NoArgsConstructor로 대체 가능 */
 
-    public static ArticleComment of(Article article,String content){
-        return new ArticleComment(article,content);
+    public ArticleComment(Article article, UserAccount userAccount, String content) {
+        this.article = article;
+        this.userAccount = userAccount;
+        this.content = content;
+    } // @NoArgsConstructor로 대체 가능
+
+    /* public static ArticleComment of(Article article, String content) {
+        return new ArticleComment(article, content);
+    }*/
+    public static ArticleComment of(Article article, UserAccount userAccount, String content) {
+        return new ArticleComment(article, userAccount, content);
     }
 
     @Override
